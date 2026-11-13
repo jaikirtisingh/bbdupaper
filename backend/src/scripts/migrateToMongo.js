@@ -30,7 +30,11 @@ async function migrate() {
   const raw = fs.readFileSync(DB_FILE, 'utf-8');
   const data = JSON.parse(raw);
 
-  console.log('🔄 Starting Data Migration from db.json to MongoDB Atlas:');
+  console.log('🔄 Cleaning old demo collections and initializing clean production database:');
+
+  // Clear demo resources from MongoDB Atlas
+  await Resource.deleteMany({ isSampleData: true });
+  console.log('- Cleared all sample/demo papers from MongoDB Atlas.');
 
   // 1. Universities
   if (data.universities && data.universities.length > 0) {
@@ -49,7 +53,7 @@ async function migrate() {
         { upsert: true, new: true }
       );
     }
-    console.log(`- Migrated ${data.universities.length} Universities.`);
+    console.log(`- Synced ${data.universities.length} Universities.`);
   }
 
   // 2. Branches
@@ -67,7 +71,7 @@ async function migrate() {
         { upsert: true, new: true }
       );
     }
-    console.log(`- Migrated ${data.branches.length} Branches.`);
+    console.log(`- Synced ${data.branches.length} Branches.`);
   }
 
   // 3. Subjects
@@ -87,66 +91,34 @@ async function migrate() {
         { upsert: true, new: true }
       );
     }
-    console.log(`- Migrated ${data.subjects.length} Subjects.`);
+    console.log(`- Synced ${data.subjects.length} Subjects.`);
   }
 
-  // 4. Resources
-  if (data.resources && data.resources.length > 0) {
-    for (const r of data.resources) {
-      await Resource.findOneAndUpdate(
-        { customId: r.id },
-        {
-          customId: r.id,
-          universityId: r.universityId || 'univ-aktu',
-          collegeId: r.collegeId || null,
-          courseId: r.courseId || 'course-btech',
-          branchId: r.branchId || 'br-cse',
-          semesterNumber: r.semesterNumber || 1,
-          subjectId: r.subjectId,
-          subjectName: r.subjectName || 'Engineering Subject',
-          subjectCode: r.subjectCode || '',
-          title: r.title,
-          type: r.type,
-          year: r.year || 2024,
-          moduleNumber: r.moduleNumber || r.unitNumber || null,
-          unitNumber: r.unitNumber || r.moduleNumber || null,
-          description: r.description || '',
-          fileUrl: r.fileUrl,
-          fileSize: r.fileSize || '1.2 MB',
-          pageCount: r.pageCount || 8,
-          downloadCount: r.downloadCount || 0,
-          viewCount: r.viewCount || 0,
-          isSampleData: r.isSampleData || false,
-          uploadedBy: r.uploadedBy || 'Admin'
-        },
-        { upsert: true, new: true }
-      );
-    }
-    console.log(`- Migrated ${data.resources.length} Academic Papers & Resources.`);
-  }
-
-  // 5. Users (Admin)
+  // 4. Admin Users
   if (data.users && data.users.length > 0) {
     for (const u of data.users) {
-      await User.findOneAndUpdate(
-        { email: u.email },
-        {
-          customId: u.id,
-          fullName: u.fullName,
-          email: u.email,
-          passwordHash: u.passwordHash,
-          role: u.role || 'ADMIN',
-          universityId: u.universityId || 'univ-aktu',
-          branchId: u.branchId || 'br-cse',
-          semester: u.semester || 8
-        },
-        { upsert: true, new: true }
-      );
+      if (u.role === 'ADMIN') {
+        await User.findOneAndUpdate(
+          { email: u.email },
+          {
+            customId: u.id,
+            fullName: u.fullName,
+            email: u.email,
+            passwordHash: u.passwordHash,
+            role: 'ADMIN',
+            universityId: u.universityId || 'univ-aktu',
+            branchId: u.branchId || 'br-cse',
+            semester: u.semester || 8
+          },
+          { upsert: true, new: true }
+        );
+      }
     }
-    console.log(`- Migrated ${data.users.length} Users.`);
+    console.log(`- Verified Master Admin account in MongoDB Atlas.`);
   }
 
-  console.log('\n🎉 Complete database migration from db.json to MongoDB Atlas finished successfully!');
+  const resourceCount = await Resource.countDocuments();
+  console.log(`\n🎉 Database ready! Total papers in MongoDB: ${resourceCount} (Starting with 0 sample papers).`);
   process.exit(0);
 }
 

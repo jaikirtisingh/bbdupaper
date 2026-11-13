@@ -9,11 +9,11 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
 
-  // Student local bookmarks (Zero-login required!)
+  // Student local bookmarks (Zero-login required, starts strictly empty)
   const [savedPapers, setSavedPapers] = useState(() => {
     try {
       const saved = localStorage.getItem('eduvault_saved_papers');
-      return saved ? JSON.parse(saved) : ['res-dsa-pyq-2023', 'res-dsa-notes-1'];
+      return saved ? JSON.parse(saved) : [];
     } catch (e) {
       return [];
     }
