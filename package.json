@@ -1,0 +1,12 @@
+{
+  "name": "bbdupaper",
+  "version": "1.0.0",
+  "description": "BBDU & B.Tech Academic Resources Portal",
+  "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install",
+    "start": "node backend/src/server.js"
+  },
+  "keywords": ["btech", "bbdu", "aktu", "papers"],
+  "author": "jaikirtisingh",
+  "license": "ISC"
+}
