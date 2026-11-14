@@ -247,7 +247,34 @@
       "description": "Comprehensive software development life cycle, system architecture, research paper drafting, viva defense."
     }
   ],
-  "resources": [],
+  "resources": [
+    {
+      "id": "res-388eeb5a",
+      "universityId": "univ-bbdu",
+      "collegeId": null,
+      "courseId": "course-btech",
+      "branchId": "br-cse",
+      "semesterNumber": 3,
+      "subjectId": "sub-dsa",
+      "subjectName": "Data Structures & Algorithms",
+      "subjectCode": "KCS-301",
+      "title": "tftvfvyvhbyvy",
+      "type": "PYQ",
+      "year": 2024,
+      "moduleNumber": null,
+      "unitNumber": null,
+      "description": "vhvyvh",
+      "fileUrl": "/uploads/jai_pdf-1794659088881.pdf",
+      "fileSize": "309 KB",
+      "pageCount": 8,
+      "downloadCount": 1,
+      "viewCount": 0,
+      "isSampleData": false,
+      "uploadedBy": "Chief Academic Admin",
+      "createdAt": "2026-11-14T12:24:48.891Z",
+      "updatedAt": "2026-11-14T12:25:22.772Z"
+    }
+  ],
   "users": [
     {
       "id": "usr-admin-01",
@@ -260,7 +287,7 @@
   ],
   "announcements": [],
   "stats": {
-    "totalDownloads": 0,
+    "totalDownloads": 1,
     "totalViews": 0
   }
 }
