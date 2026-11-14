@@ -1,34 +1,26 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import {
   GraduationCap,
-  Sun,
-  Moon,
-  Search,
-  ShieldCheck,
   Bookmark,
+  ShieldCheck,
+  Lock,
   LogOut,
   Menu,
-  X,
-  Lock
+  X
 } from 'lucide-react';
 
 export default function Navbar() {
-  const { adminUser, isAdmin, adminLogout, openAdminModal, savedPapers } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { isAdmin, adminLogout, openAdminModal, savedPapers } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
 
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Subjects', path: '/subjects' },
     { label: 'All Resources', path: '/resources' },
-    { label: 'Saved Papers', path: '/dashboard' },
-    { label: 'About', path: '/about' },
-    { label: 'Contact', path: '/contact' }
+    { label: 'Saved Papers', path: '/dashboard' }
   ];
 
   const isActive = (path) => {
@@ -37,91 +29,61 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90 transition-colors">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 w-full border-b border-[#1a2234] bg-[#070a12]/95 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/20 group-hover:bg-blue-700 transition">
-            <GraduationCap className="h-6 w-6" />
+        {/* Clean Logo */}
+        <Link to="/" className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#141b2d] border border-[#232f48] text-white">
+            <GraduationCap className="h-5 w-5 text-slate-200" />
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
-                Edu<span className="text-blue-600 dark:text-blue-400">Vault</span>
-              </span>
-              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                100% Free & Open
-              </span>
-            </div>
-            <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 hidden sm:block">
-              Public B.Tech Academic Resources Portal
-            </p>
+            <span className="text-base font-extrabold tracking-tight text-white">
+              BBDU<span className="text-slate-400 font-medium ml-1">Papers</span>
+            </span>
           </div>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1">
+        {/* Clean Nav Links */}
+        <nav className="hidden md:flex items-center gap-1.5">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
-              className={`rounded-lg px-3.5 py-2 text-xs font-bold transition flex items-center gap-1.5 ${
+              className={`rounded-xl px-3.5 py-1.5 text-xs font-semibold transition ${
                 isActive(link.path)
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                  ? 'bg-[#151d30] text-white border border-[#232f48]'
+                  : 'text-slate-400 hover:text-white hover:bg-[#101626]'
               }`}
             >
-              {link.label === 'Saved Papers' && (
-                <Bookmark className="h-3.5 w-3.5 text-blue-500" />
-              )}
-              <span>{link.label}</span>
-              {link.label === 'Saved Papers' && savedPapers.length > 0 && (
-                <span className="rounded-full bg-blue-100 px-1.5 py-0.2 text-[10px] font-black text-blue-700 dark:bg-blue-900 dark:text-blue-200">
-                  {savedPapers.length}
-                </span>
-              )}
+              <span className="flex items-center gap-1.5">
+                {link.label === 'Saved Papers' && <Bookmark className="h-3 w-3" />}
+                {link.label}
+                {link.label === 'Saved Papers' && savedPapers.length > 0 && (
+                  <span className="rounded-full bg-[#1e293b] px-1.5 py-0.2 text-[10px] text-slate-300">
+                    {savedPapers.length}
+                  </span>
+                )}
+              </span>
             </Link>
           ))}
         </nav>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-2.5">
-          {/* Quick Search Shortcut */}
-          <button
-            onClick={() => navigate('/resources')}
-            className="hidden sm:flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-400 hover:border-slate-300 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/60 dark:hover:border-slate-700 transition"
-          >
-            <Search className="h-3.5 w-3.5" />
-            <span>Search subjects or codes...</span>
-            <kbd className="rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] font-mono text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
-              /
-            </kbd>
-          </button>
-
-          {/* Theme Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            className="rounded-xl border border-slate-200 p-2 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800 transition"
-          >
-            {theme === 'dark' ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600" />}
-          </button>
-
-          {/* Admin Access Control */}
+        {/* Admin Login Button */}
+        <div className="flex items-center gap-2">
           {isAdmin ? (
             <div className="flex items-center gap-2">
               <Link
                 to="/admin"
-                className="flex items-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-amber-500/20 hover:bg-amber-600 transition"
+                className="flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-1.5 text-xs font-bold text-black hover:bg-slate-200 transition"
               >
-                <ShieldCheck className="h-4 w-4" />
+                <ShieldCheck className="h-3.5 w-3.5" />
                 <span>Admin Panel</span>
               </Link>
               <button
                 onClick={adminLogout}
-                title="Sign out of admin"
-                className="rounded-xl border border-slate-200 p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:border-slate-800 dark:hover:bg-red-950/40 transition"
+                title="Sign out"
+                className="rounded-xl border border-[#232f48] p-1.5 text-slate-400 hover:text-red-400 transition"
               >
                 <LogOut className="h-4 w-4" />
               </button>
@@ -129,10 +91,9 @@ export default function Navbar() {
           ) : (
             <button
               onClick={openAdminModal}
-              title="Academic Admin Portal"
-              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600 hover:border-amber-400 hover:text-amber-600 hover:bg-amber-50/50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-amber-500 dark:hover:text-amber-400 transition"
+              className="flex items-center gap-1.5 rounded-xl border border-[#232f48] bg-[#0e1424] px-3.5 py-1.5 text-xs font-semibold text-slate-300 hover:border-slate-400 hover:text-white transition"
             >
-              <Lock className="h-3.5 w-3.5 text-amber-500" />
+              <Lock className="h-3 w-3 text-slate-400" />
               <span>Admin Login</span>
             </button>
           )}
@@ -140,7 +101,7 @@ export default function Navbar() {
           {/* Mobile menu trigger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden rounded-xl border border-slate-200 p-2 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="md:hidden rounded-xl border border-[#232f48] p-1.5 text-slate-400"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -149,44 +110,21 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-6 dark:border-slate-800 dark:bg-slate-900 space-y-2">
+        <div className="md:hidden border-b border-[#1a2234] bg-[#070a12] px-4 py-3 space-y-1">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
               onClick={() => setMobileMenuOpen(false)}
-              className={`block rounded-lg px-3 py-2 text-sm font-semibold ${
+              className={`block rounded-lg px-3 py-2 text-xs font-semibold ${
                 isActive(link.path)
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400'
-                  : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'
+                  ? 'bg-[#151d30] text-white'
+                  : 'text-slate-400 hover:bg-[#101626] hover:text-white'
               }`}
             >
               {link.label}
             </Link>
           ))}
-
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-            {isAdmin ? (
-              <Link
-                to="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block rounded-lg px-3 py-2 text-sm font-semibold text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40"
-              >
-                Admin Command Center
-              </Link>
-            ) : (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  openAdminModal();
-                }}
-                className="flex items-center gap-2 w-full text-left rounded-lg px-3 py-2 text-sm font-semibold text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40"
-              >
-                <Lock className="h-4 w-4" />
-                Admin Portal Login
-              </button>
-            )}
-          </div>
         </div>
       )}
     </header>
